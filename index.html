@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="de">
 <head>
-    <title>Aidex.chebur.shop</title>
+    <title>Aidex.chebur.shop – Linx & AIDEX Sensoren</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
@@ -39,11 +39,37 @@
             font-size: 16px;
             margin-bottom: 25px;
         }
-        video {
+        .video-wrapper {
+            position: relative;
             width: 100%;
             border-radius: 12px;
+            overflow: hidden;
             box-shadow: 0 8px 20px rgba(0,0,0,0.4);
             background-color: #000;
+        }
+        video {
+            width: 100%;
+            display: block;
+        }
+        .caption-overlay {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 46px;
+            background: rgba(15, 23, 42, 0.82);
+            color: #f8fafc;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.35;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+        .caption-overlay.visible {
+            opacity: 1;
         }
         .btn { 
             background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%);
@@ -62,21 +88,53 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(46, 204, 113, 0.5);
         }
+        @media (max-width: 480px) {
+            .container { padding: 20px; }
+            .caption-overlay { font-size: 13px; bottom: 42px; padding: 6px 10px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>aidex.chebur.shop</h1>
-        <div class="subtitle">Innovationen für Ihre Gesundheit von AIDEX</div>
+        <div class="subtitle">Innovationen für Ihren Alltag – Linx & AIDEX</div>
         
-        <video controls autoplay muted loop playsinline>
-            <source src="promo.mp4" type="video/mp4">
-            Ваш браузер не поддерживает видео.
-        </video>
+        <div class="video-wrapper">
+            <video id="promoVideo" controls autoplay muted loop playsinline>
+                <source src="promo.mp4" type="video/mp4">
+                Ihr Browser unterstützt dieses Video nicht.
+            </video>
+            <div id="captionBox" class="caption-overlay"></div>
+        </div>
         
         <a href="https://chebur.shop" class="btn">ZUM SHOP CHEBUR.SHOP</a>
     </div>
+
+    <script>
+        // Здесь легко менять текст и секунды показа субтитров в будущем:
+        const subtitles = [
+            { start: 0, end: 3.5, text: "Keine täglichen Fingerstiche mehr" },
+            { start: 3.5, end: 7, text: "Linx (AIDEX) Sensor – bequem am Arm tragen" },
+            { start: 7, end: 11, text: "Alle Werte übersichtlich direkt auf dem Smartphone" },
+            { start: 11, end: 99, text: "Mehr Freiheit und Komfort rund um die Uhr" }
+        ];
+
+        const video = document.getElementById("promoVideo");
+        const captionBox = document.getElementById("captionBox");
+
+        video.addEventListener("timeupdate", () => {
+            const currentTime = video.currentTime;
+            const activeCue = subtitles.find(item => currentTime >= item.start && currentTime < item.end);
+
+            if (activeCue) {
+                captionBox.textContent = activeCue.text;
+                captionBox.classList.add("visible");
+            } else {
+                captionBox.classList.remove("visible");
+            }
+        });
+    </script>
 
 </body>
 </html>
